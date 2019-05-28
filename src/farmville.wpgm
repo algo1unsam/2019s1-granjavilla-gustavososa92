@@ -1,0 +1,8 @@
+import wollok.game.*
+import plantas.*
+import granjeros.*
+program farmVille {
+
+	console.println('Hello Wollok')
+
+}
