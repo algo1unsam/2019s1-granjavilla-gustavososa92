@@ -24,16 +24,17 @@ object hector {
 	}
 
 	method plantar(planta) {
-		if (self.noHayUnaPlanta()) planta.teSembraronEn(self.position())
+		if (self.lugarNoEstaOcupado()) planta.teSembraronEn(self.position())
 	}
 
-	method noHayUnaPlanta() = self.plantasEnMismaPosicion().isEmpty()
+	method lugarNoEstaOcupado() = self.cosasEnMismaPosicion().isEmpty()
 
-	method plantasEnMismaPosicion() = game.colliders(self)
+	method cosasEnMismaPosicion() = game.colliders(self)
 
 	method regar() {
-		if (self.noHayUnaPlanta()) game.say(self,"no tengo nada para regar")
-		self.plantasEnMismaPosicion().get(0).teRegaron()
+		if (self.lugarNoEstaOcupado()) self.error("no tengo nada para regar") else {
+			self.cosasEnMismaPosicion().forEach({ e => e.teRegaron()})
+		}
 	}
 
 }
