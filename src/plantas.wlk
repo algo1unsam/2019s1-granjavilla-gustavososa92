@@ -9,11 +9,6 @@ class Maiz {
 
 	method esAdulta() = estado.esAdulta()
 
-	method teSembraronEn(posicion) {
-		self.position(posicion)
-		game.addVisual(self)
-	}
-
 	method teRegaron() {
 		if (not self.esAdulta()) self.crece()
 	}
@@ -50,11 +45,6 @@ class Trigo {
 	}
 
 	method image() = estado.image()
-
-	method teSembraronEn(posicion) {
-		self.position(posicion)
-		game.addVisual(self)
-	}
 
 	method teRegaron() {
 		self.nuevoEstado(estado.estadoSiguiente())
@@ -97,16 +87,21 @@ object estadoTres {
 class Tomaco {
 
 	var property position
-	var property image
-
-	method teSembraronEn(posicion) {
-		self.image("tomaco.png")
-		self.position(posicion)
-		game.addVisual(self)
-	}
+	var property image = "tomaco.png"
 
 	method teRegaron() {
+		self.moverseHaciaArriba()
 	}
+
+	method moverseHaciaArriba() {
+		if (self.estaAlLimiteVertical(self.position())) self.position(self.posicionConYCero()) else {
+			self.position(self.position().up(1))
+		}
+	}
+
+	method estaAlLimiteVertical(posicion) = (posicion.y() == game.height() - 1)
+
+	method posicionConYCero() = game.at(self.position().x(), 0)
 
 }
 

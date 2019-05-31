@@ -24,7 +24,10 @@ object hector {
 	}
 
 	method plantar(planta) {
-		if (self.lugarNoEstaOcupado()) planta.teSembraronEn(self.position())
+		if (self.lugarNoEstaOcupado()) {
+			planta.position(self.position())
+			game.addVisual(planta)
+		}
 	}
 
 	method lugarNoEstaOcupado() = self.cosasEnMismaPosicion().isEmpty()
@@ -36,6 +39,27 @@ object hector {
 			self.cosasEnMismaPosicion().forEach({ e => e.teRegaron()})
 		}
 	}
+
+}
+
+object tablero {
+
+	const limiteSuperior = game.height() - 1
+	const limiteDerecho = game.width() - 1
+	const limiteCero = 0
+
+	method moverHaciaArriba(objeto) {
+	}
+
+	method estaEnLimitesDelTablero(posicion) {}
+
+	method posicionTodoAbajo(posicion) = game.at(posicion.x(), limiteCero)
+
+	method posicionTodoArriba(posicion) = game.at(posicion.x(), limiteSuperior)
+
+	method posicionTodoIzq(posicion) = game.at(limiteCero, posicion.y())
+
+	method posicionTodoDer(posicion) = game.at(limiteDerecho, posicion.y())
 
 }
 

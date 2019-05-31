@@ -5,16 +5,16 @@ import granjeros.*
 program farmVille {
 //	CONFIG	
 	game.title("FARMVILLE DE TAVO")
-	game.height(15)
-	game.width(15)
+	game.height(10)
+	game.width(18)
 	game.ground("ground.png")
 //	VISUALES
 	game.addVisual(hector)
-	game.errorReporter(hector)
 	keyboard.up().onPressDo{ hector.moverse(hector.position().up(1)) }
 	keyboard.down().onPressDo{ hector.moverse(hector.position().down(1)) }
 	keyboard.left().onPressDo{ hector.moverse(hector.position().left(1)) }
 	keyboard.right().onPressDo{ hector.moverse(hector.position().right(1)) }
+	game.errorReporter(hector)
 	keyboard.m().onPressDo{ hector.plantarMaiz() }
 	keyboard.t().onPressDo{ hector.plantarTrigo() }
 	keyboard.o().onPressDo{ hector.plantarTomaco() }
