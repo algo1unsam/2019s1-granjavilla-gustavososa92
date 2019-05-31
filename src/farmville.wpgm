@@ -10,10 +10,10 @@ program farmVille {
 	game.ground("ground.png")
 //	VISUALES
 	game.addVisual(hector)
-	keyboard.up().onPressDo{ hector.moverse(hector.position().up(1)) }
-	keyboard.down().onPressDo{ hector.moverse(hector.position().down(1)) }
-	keyboard.left().onPressDo{ hector.moverse(hector.position().left(1)) }
-	keyboard.right().onPressDo{ hector.moverse(hector.position().right(1)) }
+	keyboard.up().onPressDo{ hector.moverHaciaArriba() }
+	keyboard.down().onPressDo{ hector.moverHaciaAbajo()}
+	keyboard.left().onPressDo{ hector.moverHaciaIzq() }
+	keyboard.right().onPressDo{ hector.moverHaciaDer() }
 	game.errorReporter(hector)
 	keyboard.m().onPressDo{ hector.plantarMaiz() }
 	keyboard.t().onPressDo{ hector.plantarTrigo() }

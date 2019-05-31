@@ -1,4 +1,5 @@
 import wollok.game.*
+import granjeros.*
 
 class Maiz {
 
@@ -90,18 +91,16 @@ class Tomaco {
 	var property image = "tomaco.png"
 
 	method teRegaron() {
-		self.moverseHaciaArriba()
+		self.moverHaciaArriba()
 	}
 
-	method moverseHaciaArriba() {
-		if (self.estaAlLimiteVertical(self.position())) self.position(self.posicionConYCero()) else {
-			self.position(self.position().up(1))
-		}
+	method moverHaciaArriba() {
+		tablero.moverHaciaArriba(self)
 	}
 
-	method estaAlLimiteVertical(posicion) = (posicion.y() == game.height() - 1)
-
-	method posicionConYCero() = game.at(self.position().x(), 0)
+	method moverse(nuevaPosicion) {
+		self.position(nuevaPosicion)
+	}
 
 }
 
