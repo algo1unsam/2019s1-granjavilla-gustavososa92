@@ -4,6 +4,14 @@ import plantas.*
 object hector {
 
 	var property position = game.at(5, 5)
+	const plantasCosechadas = []
+	var dineroJuntado = 0
+
+	method dinero() = dineroJuntado
+
+	method vaciarPlantasCosechadas() {
+		plantasCosechadas.clear()
+	}
 
 	method image() = "player.png"
 
@@ -28,16 +36,50 @@ object hector {
 
 	method lugarNoEstaOcupado() = self.cosasEnMismaPosicion().isEmpty()
 
-	method cosasEnMismaPosicion() = game.colliders(self)
+	method cosasEnMismaPosicion() = game.colliders(self) // me da todos menos hector
 
-	method regar() {
-		if (self.lugarNoEstaOcupado()) self.error("no tengo nada para regar") else {
+//--------------------------------------------------------------------------
+	method regar() { // ojo que teRegaron() se lo envia a todos los colliders
+		if (self.lugarNoEstaOcupado()) tablero.errorRegar() else {
 			self.cosasEnMismaPosicion().forEach({ e => e.teRegaron()})
 		}
 	}
 
+	method intentarCosechar() {
+		self.cosasEnMismaPosicion().forEach({ e =>
+			if (e.sePuedeCosechar()) { // ojo que sePuedeCosechar() se lo envia a todos los colliders
+				plantasCosechadas.add(e)
+				e.teCosecharon()
+			}
+		})
+	}
+
+//----------------------------------------------------------------
+	method cosechar() {
+		if (self.lugarNoEstaOcupado()) tablero.errorCosechar() else {
+			self.intentarCosechar()
+		}
+	}
+
+	method valorVentaPlantas() = plantasCosechadas.sum({ p => p.valorVenta() })
+
+	method cantidadDePlantasParaVender() = plantasCosechadas.size()
+
+	method cosechoPlantas() = self.cantidadDePlantasParaVender() > 0
+
+	method vender() {
+		if (self.cosechoPlantas()) {
+			dineroJuntado += self.valorVentaPlantas()
+			self.vaciarPlantasCosechadas()
+		} else tablero.errorVender()
+	}
+
 	method moverse(nuevaPosicion) {
 		self.position(nuevaPosicion)
+	}
+
+	method cuantoTenes() {
+		game.say(self, "Junte " + self.dinero() + " monedas, y tengo " + self.cantidadDePlantasParaVender() + " plantas para vender")
 	}
 
 }
@@ -47,6 +89,18 @@ object tablero {
 	const limiteSuperior = (game.height() - 1)
 	const limiteDerecho = (game.width() - 1)
 	const limiteCero = 0
+
+	method errorRegar() {
+		self.error("no tengo nada para regar")
+	}
+
+	method errorCosechar() {
+		self.error("no tengo nada para cosechar")
+	}
+
+	method errorVender() {
+		self.error("no tengo Plantas para vender")
+	}
 
 	method moverHaciaArriba(objeto) {
 		game.height(15)
@@ -77,7 +131,6 @@ object tablero {
 
 	method posicionTodoDer(posicion) = game.at(limiteDerecho, posicion.y())
 
-//	method estaEnLimitesDelTablero(posicion) = self.abajoDeTodo(posicion) or self.arribaDeTodo(posicion) or self.izqDeTodo(posicion) or self.derDeTodo(posicion)
 	method abajoDeTodo(posicion) = posicion.y() == limiteCero
 
 	method arribaDeTodo(posicion) = posicion.y() == limiteSuperior

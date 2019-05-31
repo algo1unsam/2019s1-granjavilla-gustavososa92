@@ -19,5 +19,8 @@ program farmVille {
 	keyboard.t().onPressDo{ hector.plantarTrigo() }
 	keyboard.o().onPressDo{ hector.plantarTomaco() }
 	keyboard.r().onPressDo{ hector.regar() }
+	keyboard.c().onPressDo{ hector.cosechar() }
+	keyboard.v().onPressDo{ hector.vender() }
+	keyboard.space().onPressDo{ hector.cuantoTenes() }
 	game.start()
 }

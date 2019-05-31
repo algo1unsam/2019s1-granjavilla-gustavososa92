@@ -1,21 +1,94 @@
 import wollok.game.*
 import granjeros.*
 
-class Maiz {
+class CosasDelTablero {
 
 	var property position
+
+	method image()
+
+	method sePuedeCosechar() = false
+
+	method teRegaron() {
+		tablero.errorRegar()
+	}
+
+}
+
+class Plantas inherits CosasDelTablero {
+
+	method teCosecharon() {
+		game.removeVisual(self)
+	}
+
+}
+
+class Maiz inherits Plantas {
+
 	var estado = estadoBebe
 
-	method image() = estado.image()
+	override method image() = estado.image()
 
 	method esAdulta() = estado.esAdulta()
 
-	method teRegaron() {
+	method valorVenta() = 150
+
+	override method sePuedeCosechar() = self.esAdulta()
+
+	override method teRegaron() {
 		if (not self.esAdulta()) self.crece()
 	}
 
 	method crece() {
 		estado = estadoAdulta
+	}
+
+}
+
+class Trigo inherits Plantas {
+
+	var estado = estadoCero
+
+	method nuevoEstado(unEstado) {
+		estado = unEstado
+	}
+
+	method valorVenta() = (self.nivel() - 1) * 100
+
+	override method image() = estado.image()
+
+	method nivel() = estado.nivel()
+
+	override method sePuedeCosechar() = self.nivel() > 1
+
+	override method teRegaron() {
+		self.cambiarDeEstado()
+	}
+
+	method cambiarDeEstado() {
+		self.nuevoEstado(estado.estadoSiguiente())
+	}
+
+}
+
+class Tomaco inherits Plantas {
+
+	override method image() = "tomaco.png"
+
+	override method sePuedeCosechar() = true
+
+	method valorVenta() = 80
+
+	override method teRegaron() {
+		self.moverHaciaArriba()
+	}
+
+	method moverHaciaArriba() {
+		tablero.moverHaciaArriba(self)
+	}
+
+	method moverse(nuevaPosicion) {
+		self.position(nuevaPosicion)
 	}
 
 }
@@ -36,24 +109,9 @@ object estadoAdulta {
 
 }
 
-class Trigo {
-
-	var property position
-	var estado = estadoCero
-
-	method nuevoEstado(unEstado) {
-		estado = unEstado
-	}
-
-	method image() = estado.image()
-
-	method teRegaron() {
-		self.nuevoEstado(estado.estadoSiguiente())
-	}
-
-}
-
 object estadoCero {
+
+	const property nivel = 0
 
 	method image() = "wheat_0.png"
 
@@ -63,6 +121,8 @@ object estadoCero {
 
 object estadoUno {
 
+	const property nivel = 1
+
 	method image() = "wheat_1.png"
 
 	method estadoSiguiente() = estadoDos
@@ -70,6 +130,8 @@ object estadoUno {
 }
 
 object estadoDos {
+
+	const property nivel = 2
 
 	method image() = "wheat_2.png"
 
@@ -79,28 +141,11 @@ object estadoDos {
 
 object estadoTres {
 
+	const property nivel = 3
+
 	method image() = "wheat_3.png"
 
 	method estadoSiguiente() = estadoCero
-
-}
-
-class Tomaco {
-
-	var property position
-	var property image = "tomaco.png"
-
-	method teRegaron() {
-		self.moverHaciaArriba()
-	}
-
-	method moverHaciaArriba() {
-		tablero.moverHaciaArriba(self)
-	}
-
-	method moverse(nuevaPosicion) {
-		self.position(nuevaPosicion)
-	}
 
 }
 
