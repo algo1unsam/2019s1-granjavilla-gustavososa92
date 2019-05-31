@@ -3,8 +3,10 @@ import granjeros.*
 
 class CosasDelTablero {
 
-	method image()
+	method image() // conviene ponerlo en la superclase? en cada clase que la hereda hago un override...
 
+	/*lo estoy usando para que no pueda cosechar ninguna cosa que que vaya a poner en el tablero,
+	 * salvo que yo quiera que si lo haga ej. plantas*/
 	method sePuedeCosechar() = false
 
 	method teRegaron() {
@@ -65,15 +67,15 @@ class Maiz inherits Plantas {
 
 	method esAdulta() = estado.esAdulta()
 
-	method valorVenta() = 150
+	method valorVenta() = 150 // lo usan todas las "plantas" conviene ponerlo en la clase Plantas?
 
 	override method sePuedeCosechar() = self.esAdulta()
 
 	override method teRegaron() {
-		if (not self.esAdulta()) self.crece()
+		if (not self.esAdulta()) self.crecer()
 	}
 
-	method crece() {
+	method crecer() {
 		estado = estadoAdulta
 	}
 
@@ -81,13 +83,12 @@ class Maiz inherits Plantas {
 
 class Trigo inherits Plantas {
 
-	var estado = estadoCero
+	var property estado = estadoCero
 
-	method nuevoEstado(unEstado) {
-		estado = unEstado
-	}
-
-	method valorVenta() = (self.nivel() - 1) * 100
+//	method nuevoEstado(unEstado) {
+//		estado = unEstado
+//	}
+	method valorVenta() = (self.nivel() - 1) * 100 // puedo ponerlo en los objetos estados, conviene?
 
 	override method image() = estado.image()
 
@@ -100,7 +101,8 @@ class Trigo inherits Plantas {
 	}
 
 	method cambiarDeEstado() {
-		self.nuevoEstado(estado.estadoSiguiente())
+//		self.nuevoEstado(estado.siguiente())
+		self.estado(estado.siguiente())
 	}
 
 }
@@ -156,7 +158,7 @@ object estadoCero {
 
 	method image() = "wheat_0.png"
 
-	method estadoSiguiente() = estadoUno
+	method siguiente() = estadoUno
 
 }
 
@@ -166,7 +168,7 @@ object estadoUno {
 
 	method image() = "wheat_1.png"
 
-	method estadoSiguiente() = estadoDos
+	method siguiente() = estadoDos
 
 }
 
@@ -176,7 +178,7 @@ object estadoDos {
 
 	method image() = "wheat_2.png"
 
-	method estadoSiguiente() = estadoTres
+	method siguiente() = estadoTres
 
 }
 
@@ -186,7 +188,7 @@ object estadoTres {
 
 	method image() = "wheat_3.png"
 
-	method estadoSiguiente() = estadoCero
+	method siguiente() = estadoCero
 
 }
 

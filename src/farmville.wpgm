@@ -6,14 +6,14 @@ program farmVille {
 //	CONFIG	
 	game.title("FARMVILLE DE TAVO")
 	game.height(10)
-	game.width(18)
+	game.width(17)
 	game.ground("ground.png")
 //	VISUALES
 	
 	game.addVisual(hector)
-	game.addVisualIn(new Mercado(monedas = 150), game.at(0.randomUpTo(17), 0.randomUpTo(9)))
-	game.addVisualIn(new Mercado(monedas = 500), game.at(0.randomUpTo(17), 0.randomUpTo(9)))
-	game.addVisualIn(new Mercado(monedas = 1500), game.at(0.randomUpTo(17), 0.randomUpTo(9)))
+	game.addVisualIn(new Mercado(monedas = 150), game.at(3,5))//(0.randomUpTo(17), 0.randomUpTo(9)))
+	game.addVisualIn(new Mercado(monedas = 500), game.at(8,5))//(0.randomUpTo(17), 0.randomUpTo(9)))
+	game.addVisualIn(new Mercado(monedas = 1500), game.at(13,5))//(0.randomUpTo(17), 0.randomUpTo(9)))
 	keyboard.up().onPressDo{ tablero.moverHaciaArriba(hector) }
 	keyboard.down().onPressDo{ tablero.moverHaciaAbajo(hector) }
 	keyboard.left().onPressDo{ tablero.moverHaciaIzq(hector) }

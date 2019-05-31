@@ -7,7 +7,7 @@ object hector {
 	const plantasCosechadas = []
 	var dineroJuntado = 0
 
-	method dinero() = dineroJuntado
+	method dinero() = dineroJuntado // pasar a property?
 
 	method vaciarPlantasCosechadas() {
 		plantasCosechadas.clear()
@@ -15,6 +15,10 @@ object hector {
 
 	method image() = "player.png"
 
+//------------------------------------------------------------------
+	/* tengo que reveer estos 3 metodos porque me crean las instancias antes de verificar si lo puede plantar
+	 * pero si en todos los metodos evaluo el if, estoy repitiendo codigo.....
+	 */
 	method plantarMaiz() {
 		self.plantar(new Maiz())
 	}
@@ -27,19 +31,19 @@ object hector {
 		self.plantar(new Tomaco())
 	}
 
+//---------------------------------------------------------------
 	method plantar(planta) {
-		if (self.lugarNoEstaOcupado()) {
+		if (self.lugarEstaVacio()) {
 			planta.tePlantaron(self.position())
 		}
 	}
 
-	method lugarNoEstaOcupado() = self.cosasEnMismaPosicion().isEmpty()
+	method lugarEstaVacio() = self.cosasEnMismaPosicion().isEmpty()
 
-	method cosasEnMismaPosicion() = game.colliders(self) // me da todos menos hector
+	method cosasEnMismaPosicion() = game.colliders(self) // me da todos menos hector, estimo que es una lista
 
-//--------------------------------------------------------------------------
 	method regar() { // ojo que teRegaron() se lo envia a todos los colliders
-		if (self.lugarNoEstaOcupado()) tablero.errorRegar() else {
+		if (self.lugarEstaVacio()) tablero.errorRegar() else {
 			self.cosasEnMismaPosicion().forEach({ e => e.teRegaron()})
 		}
 	}
@@ -48,14 +52,13 @@ object hector {
 		self.cosasEnMismaPosicion().forEach({ e =>
 			if (e.sePuedeCosechar()) { // ojo que sePuedeCosechar() se lo envia a todos los colliders
 				plantasCosechadas.add(e)
-				e.teCosecharon()
+				e.teCosecharon() // este mensaje solo le llega las cosas que si se pueden cosechar, que deberian ser las plantas
 			}
 		})
 	}
 
-//----------------------------------------------------------------
 	method cosechar() {
-		if (self.lugarNoEstaOcupado()) tablero.errorCosechar() else {
+		if (self.lugarEstaVacio()) tablero.errorCosechar() else {
 			self.intentarCosechar()
 		}
 	}
@@ -81,15 +84,16 @@ object hector {
 	}
 
 	method intentarVender() {
-		if (self.lugarNoEstaOcupado()) tablero.errorMercado() else {
-			self.cosasEnMismaPosicion().forEach({ e => e.comprar(plantasCosechadas, self.valorVentaPlantas(), self)}) // comprar(p1,p2,p3) se lo envia a todos los colliders
+		if (self.lugarEstaVacio()) tablero.errorMercado() else {
+			self.cosasEnMismaPosicion().forEach({ e => e.comprar(plantasCosechadas, self.valorVentaPlantas(), self)})
+		// comprar(p1,p2,p3) se lo envia a todos los colliders
 		}
 	}
 
 	method cobrar(dinero) {
 		dineroJuntado += dinero
 		self.vaciarPlantasCosechadas()
-		game.say(self,"Transaccion OK!!")
+		game.say(self, "Transaccion OK!!") // lo agregue para saber cuando hizo bien la operacion
 	}
 
 }
@@ -101,15 +105,15 @@ object tablero {
 	const limiteCero = 0
 
 	method errorRegar() {
-		self.error("no tengo nada para regar")
+		self.error("No tengo nada para regar")
 	}
 
 	method errorCosechar() {
-		self.error("no tengo nada para cosechar")
+		self.error("No tengo nada para cosechar")
 	}
 
 	method errorVender() {
-		self.error("no tengo Plantas para vender")
+		self.error("No tengo Plantas para vender")
 	}
 
 	method errorComprar(mercado) {
@@ -117,11 +121,10 @@ object tablero {
 	}
 
 	method errorMercado() {
-		self.error("No estoy en un mercado")
+		self.error("Tengo que ir a un mercado primero")
 	}
 
 	method moverHaciaArriba(objeto) {
-		game.height(15)
 		self.moverElemento(objeto, self.arribaDeTodo(objeto.position()), self.posicionTodoAbajo(objeto.position()), objeto.position().up(1))
 	}
 
@@ -141,6 +144,7 @@ object tablero {
 		if (condicion) objeto.moverse(alBorde) else objeto.moverse(normal)
 	}
 
+	/*estas son las posiciones del objeto modificadas para que cambie de lado*/
 	method posicionTodoAbajo(posicion) = game.at(posicion.x(), limiteCero)
 
 	method posicionTodoArriba(posicion) = game.at(posicion.x(), limiteSuperior)
@@ -149,6 +153,7 @@ object tablero {
 
 	method posicionTodoDer(posicion) = game.at(limiteDerecho, posicion.y())
 
+	/*estas son las comprobaciones de si esta en cada uno de los bordes */
 	method abajoDeTodo(posicion) = posicion.y() == limiteCero
 
 	method arribaDeTodo(posicion) = posicion.y() == limiteSuperior
