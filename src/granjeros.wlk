@@ -29,8 +29,7 @@ object hector {
 
 	method plantar(planta) {
 		if (self.lugarNoEstaOcupado()) {
-			planta.position(self.position())
-			game.addVisual(planta)
+			planta.tePlantaron(self.position())
 		}
 	}
 
@@ -67,19 +66,30 @@ object hector {
 
 	method cosechoPlantas() = self.cantidadDePlantasParaVender() > 0
 
-	method vender() {
-		if (self.cosechoPlantas()) {
-			dineroJuntado += self.valorVentaPlantas()
-			self.vaciarPlantasCosechadas()
-		} else tablero.errorVender()
-	}
-
 	method moverse(nuevaPosicion) {
 		self.position(nuevaPosicion)
 	}
 
 	method cuantoTenes() {
 		game.say(self, "Junte " + self.dinero() + " monedas, y tengo " + self.cantidadDePlantasParaVender() + " plantas para vender")
+	}
+
+	method vender() {
+		if (self.cosechoPlantas()) {
+			self.intentarVender()
+		} else tablero.errorVender()
+	}
+
+	method intentarVender() {
+		if (self.lugarNoEstaOcupado()) tablero.errorMercado() else {
+			self.cosasEnMismaPosicion().forEach({ e => e.comprar(plantasCosechadas, self.valorVentaPlantas(), self)}) // comprar(p1,p2,p3) se lo envia a todos los colliders
+		}
+	}
+
+	method cobrar(dinero) {
+		dineroJuntado += dinero
+		self.vaciarPlantasCosechadas()
+		game.say(self,"Transaccion OK!!")
 	}
 
 }
@@ -100,6 +110,14 @@ object tablero {
 
 	method errorVender() {
 		self.error("no tengo Plantas para vender")
+	}
+
+	method errorComprar(mercado) {
+		mercado.error("No Tengo Monedas Suficientes")
+	}
+
+	method errorMercado() {
+		self.error("No estoy en un mercado")
 	}
 
 	method moverHaciaArriba(objeto) {

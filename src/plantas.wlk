@@ -3,8 +3,6 @@ import granjeros.*
 
 class CosasDelTablero {
 
-	var property position
-
 	method image()
 
 	method sePuedeCosechar() = false
@@ -13,9 +11,45 @@ class CosasDelTablero {
 		tablero.errorRegar()
 	}
 
+	method comprar(lista, dinero, persona) {
+	}
+
+}
+
+class Mercado inherits CosasDelTablero {
+
+	var monedas
+	const cosasParaVender = []
+
+	override method image() = "market.png"
+
+	method cantidadDeMonedas() = monedas
+
+	method meAlcanza(dinero) = dinero <= monedas
+
+	override method comprar(lista, dinero, persona) {
+		if (self.meAlcanza(dinero)) {
+			self.agregarACosas(lista)
+			self.pagar(dinero, persona)
+		} else tablero.errorComprar(self)
+	}
+
+	method agregarACosas(lista) {
+		cosasParaVender.addAll(lista)
+	}
+
+	method pagar(dinero, persona) {
+		monedas -= dinero
+		persona.cobrar(dinero)
+	}
+
 }
 
 class Plantas inherits CosasDelTablero {
+
+	method tePlantaron(posicion) {
+		game.addVisualIn(self, posicion)
+	}
 
 	method teCosecharon() {
 		game.removeVisual(self)
@@ -73,6 +107,8 @@ class Trigo inherits Plantas {
 
 class Tomaco inherits Plantas {
 
+	var property position
+
 	override method image() = "tomaco.png"
 
 	override method sePuedeCosechar() = true
@@ -89,6 +125,11 @@ class Tomaco inherits Plantas {
 
 	method moverse(nuevaPosicion) {
 		self.position(nuevaPosicion)
+	}
+
+	override method tePlantaron(posicion) {
+		self.position(posicion)
+		game.addVisual(self)
 	}
 
 }
