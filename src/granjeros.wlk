@@ -36,22 +36,6 @@ object hector {
 		}
 	}
 
-	method moverHaciaArriba() {
-		tablero.moverHaciaArriba(self)
-	}
-
-	method moverHaciaAbajo() {
-		tablero.moverHaciaAbajo(self)
-	}
-
-	method moverHaciaIzq() {
-		tablero.moverHaciaIzq(self)
-	}
-
-	method moverHaciaDer() {
-		tablero.moverHaciaDer(self)
-	}
-
 	method moverse(nuevaPosicion) {
 		self.position(nuevaPosicion)
 	}
@@ -60,11 +44,12 @@ object hector {
 
 object tablero {
 
-	const limiteSuperior = 9 // (game.height() - 1)
-	const limiteDerecho = 17 // (game.width() - 1)
+	const limiteSuperior = (game.height() - 1)
+	const limiteDerecho = (game.width() - 1)
 	const limiteCero = 0
 
 	method moverHaciaArriba(objeto) {
+		game.height(15)
 		self.moverElemento(objeto, self.arribaDeTodo(objeto.position()), self.posicionTodoAbajo(objeto.position()), objeto.position().up(1))
 	}
 
