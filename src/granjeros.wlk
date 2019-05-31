@@ -60,53 +60,46 @@ object hector {
 
 object tablero {
 
-	const limiteSuperior = (game.height() - 1)
-	const limiteDerecho = (game.width() - 1)
+	const limiteSuperior = 9 // (game.height() - 1)
+	const limiteDerecho = 17 // (game.width() - 1)
 	const limiteCero = 0
-	var property elemento = hector // me pide inicializar
-	var posicionDelElemento = elemento.position()
 
 	method moverHaciaArriba(objeto) {
-		self.elemento(objeto)
-		self.moverElemento(self.posicionTodoAbajo(), posicionDelElemento.up(1))
+		self.moverElemento(objeto, self.arribaDeTodo(objeto.position()), self.posicionTodoAbajo(objeto.position()), objeto.position().up(1))
 	}
 
 	method moverHaciaAbajo(objeto) {
-		self.elemento(objeto)
-		self.moverElemento(self.posicionTodoArriba(), posicionDelElemento.down(1))
+		self.moverElemento(objeto, self.abajoDeTodo(objeto.position()), self.posicionTodoArriba(objeto.position()), objeto.position().down(1))
 	}
 
 	method moverHaciaIzq(objeto) {
-		self.elemento(objeto)
-		self.moverElemento(self.posicionTodoDer(), posicionDelElemento.left(1))
+		self.moverElemento(objeto, self.izqDeTodo(objeto.position()), self.posicionTodoDer(objeto.position()), objeto.position().left(1))
 	}
 
 	method moverHaciaDer(objeto) {
-		self.elemento(objeto)
-		self.moverElemento(self.posicionTodoIzq(), posicionDelElemento.right(1))
+		self.moverElemento(objeto, self.derDeTodo(objeto.position()), self.posicionTodoIzq(objeto.position()), objeto.position().right(1))
 	}
 
-	method moverElemento(alBorde, normal) {
-		if (self.estaEnLimitesDelTablero()) elemento.moverse(alBorde) else elemento.moverse(normal)
+	method moverElemento(objeto, condicion, alBorde, normal) {
+		if (condicion) objeto.moverse(alBorde) else objeto.moverse(normal)
 	}
 
-	method posicionTodoAbajo() = game.at(posicionDelElemento.x(), limiteCero)
+	method posicionTodoAbajo(posicion) = game.at(posicion.x(), limiteCero)
 
-	method posicionTodoArriba() = game.at(posicionDelElemento.x(), limiteSuperior)
+	method posicionTodoArriba(posicion) = game.at(posicion.x(), limiteSuperior)
 
-	method posicionTodoIzq() = game.at(limiteCero, posicionDelElemento.y())
+	method posicionTodoIzq(posicion) = game.at(limiteCero, posicion.y())
 
-	method posicionTodoDer() = game.at(limiteDerecho, posicionDelElemento.y())
+	method posicionTodoDer(posicion) = game.at(limiteDerecho, posicion.y())
 
-	method estaEnLimitesDelTablero() = self.abajoDeTodo() or self.arribaDeTodo() or self.izqDeTodo() or self.derDeTodo()
+//	method estaEnLimitesDelTablero(posicion) = self.abajoDeTodo(posicion) or self.arribaDeTodo(posicion) or self.izqDeTodo(posicion) or self.derDeTodo(posicion)
+	method abajoDeTodo(posicion) = posicion.y() == limiteCero
 
-	method abajoDeTodo() = posicionDelElemento.y() == limiteCero
+	method arribaDeTodo(posicion) = posicion.y() == limiteSuperior
 
-	method arribaDeTodo() = posicionDelElemento.y() == limiteSuperior
+	method izqDeTodo(posicion) = posicion.x() == limiteCero
 
-	method izqDeTodo() = posicionDelElemento.x() == limiteCero
-
-	method derDeTodo() = posicionDelElemento.x() == limiteDerecho
+	method derDeTodo(posicion) = posicion.x() == limiteDerecho
 
 }
 
