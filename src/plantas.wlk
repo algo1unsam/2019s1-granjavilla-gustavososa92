@@ -16,6 +16,8 @@ class CosasDelTablero {
 	method comprar(lista, dinero, persona) {
 	}
 
+	method dejaPasar() = true
+
 }
 
 class Mercado inherits CosasDelTablero {
@@ -23,7 +25,7 @@ class Mercado inherits CosasDelTablero {
 	var monedas
 	const cosasParaVender = []
 
-	override method image() = "market.png"
+	override method image() = if (monedas>=80)"market.png"else "market_closed.png"
 
 	method cantidadDeMonedas() = monedas
 

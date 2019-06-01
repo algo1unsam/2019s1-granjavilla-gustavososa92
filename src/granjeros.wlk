@@ -1,11 +1,14 @@
 import wollok.game.*
 import plantas.*
+import arbustos.*
 
 object hector {
 
 	var property position = game.at(5, 5)
 	const plantasCosechadas = []
 	var dineroJuntado = 0
+
+	method dejarPasar() = true
 
 	method dinero() = dineroJuntado // pasar a property?
 
@@ -29,6 +32,10 @@ object hector {
 
 	method plantarTomaco() {
 		self.plantar(new Tomaco())
+	}
+
+	method plantarArbusto() {
+		self.plantar(new Arbusto())
 	}
 
 //---------------------------------------------------------------
@@ -70,7 +77,7 @@ object hector {
 	method cosechoPlantas() = self.cantidadDePlantasParaVender() > 0
 
 	method moverse(nuevaPosicion) {
-		self.position(nuevaPosicion)
+		if (self.puedoPasar(nuevaPosicion)) self.position(nuevaPosicion) else self.error("No puedo Pasar!!")
 	}
 
 	method cuantoTenes() {
@@ -95,6 +102,8 @@ object hector {
 		self.vaciarPlantasCosechadas()
 		game.say(self, "Transaccion OK!!") // lo agregue para saber cuando hizo bien la operacion
 	}
+
+	method puedoPasar(posicion) = game.getObjectsIn(posicion).all({ e => e.dejaPasar() })
 
 }
 
@@ -161,6 +170,13 @@ object tablero {
 	method izqDeTodo(posicion) = posicion.x() == limiteCero
 
 	method derDeTodo(posicion) = posicion.x() == limiteDerecho
+
+	/*para agregar arbustos */
+	method dejarLibreSoloAbajo(posicion) {
+		game.addVisualIn(new Arbusto(), posicion.left(1))
+		game.addVisualIn(new Arbusto(), posicion.right(1))
+		new Range(1,3).forEach({ valor => game.addVisualIn(new Arbusto(), posicion.up(1).left(2).right(valor))})
+	}
 
 }
 
